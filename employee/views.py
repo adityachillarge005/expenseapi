@@ -5,15 +5,20 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated,IsAdminUser
 # Create your views here.
 
-class employees(generics.ListCreateAPIView):
-    permission_classes = [IsAuthenticated]
+class EmployeeListCreateView(generics.ListCreateAPIView):
+    permission_classes = [IsAdminUser]
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
 
-class employeeDetails(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = [IsAuthenticated]
+class EmployeeRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAdminUser]
     queryset = Employee.objects.all()
     serializer_class = EmployeeSerializer
-    lookup_field = 'id'
 
+class EmployeeProfileView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = EmployeeSerializer
+
+    def get_object(self):
+        return Employee.objects.get(user = self.request.user)
 
